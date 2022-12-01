@@ -13,8 +13,7 @@ TEST_INPUT_FILE = TEST_INPUT_DIR.joinpath(f"{FILE_STEM}.txt")
 
 # SOLUTION
 
-
-def _solve_part_one(data):
+def _sum_sort_elves(data):
     def safe_parse(s):
         if s == "":
             return None
@@ -27,11 +26,15 @@ def _solve_part_one(data):
 
     elves = sorted(map(sum, elves), reverse=True)
 
-    return sum(elves[:3])
+    return elves
+
+
+def _solve_part_one(data):
+    return _sum_sort_elves(data)[0]
 
 
 def _solve_part_two(data):
-    raise NotImplementedError
+    return sum(_sum_sort_elves(data)[:3])
 
 
 # TASK-SPECIFIC BOILERPLATE
