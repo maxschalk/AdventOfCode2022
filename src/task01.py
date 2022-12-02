@@ -13,16 +13,19 @@ TEST_INPUT_FILE = TEST_INPUT_DIR.joinpath(f"{FILE_STEM}.txt")
 
 # SOLUTION
 
+
 def _sum_sort_elves(data):
     def safe_parse(s):
         if s == "":
             return None
-        
+
         return int(s)
 
     data = map(safe_parse, data)
 
-    elves = (list(y) for x, y in itertools.groupby(data, lambda elem: elem is None) if not x)
+    elves = (
+        list(y) for x, y in itertools.groupby(data, lambda elem: elem is None) if not x
+    )
 
     elves = sorted(map(sum, elves), reverse=True)
 

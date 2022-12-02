@@ -19,12 +19,12 @@ def main():
 
     input_file_path = TASK_INPUT_DIR.joinpath(f"task{task_number}.txt")
 
-    with open(input_file_path.as_posix(), 'w') as file:
+    with open(input_file_path.as_posix(), "w") as file:
         pass
 
     test_input_file_path = TEST_INPUT_DIR.joinpath(f"task{task_number}.txt")
 
-    with open(test_input_file_path.as_posix(), 'w') as file:
+    with open(test_input_file_path.as_posix(), "w") as file:
         pass
 
     script_file_path = SRC_DIR.joinpath(f"task{task_number}.py")
@@ -41,5 +41,5 @@ def main():
         file.write(src_code)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

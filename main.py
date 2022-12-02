@@ -1,6 +1,6 @@
 import sys
 
-from src.task01 import main as run_task
+from src.task02 import main as run_task
 
 
 def main():
@@ -12,5 +12,5 @@ def main():
     run_task(test=eval(test))
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()
