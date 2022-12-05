@@ -14,12 +14,24 @@ TEST_INPUT_FILE = TEST_INPUT_DIR.joinpath(f"{FILE_STEM}.txt")
 # SOLUTION
 
 
+def has_redundant(sections):
+    a, b, x, y = sections
+
+    return (a >= x and b <= y) or (x >= a and y <= b)
+
+
 def _solve_part_one(data):
-    print(data)
+    return len(list(filter(has_redundant, data)))
+
+
+def has_overlap(sections):
+    a, b, x, y = sections
+
+    return not ((a < x and b < x) or (a > y and b > y))
 
 
 def _solve_part_two(data):
-    raise NotImplementedError
+    return len(list(filter(has_overlap, data)))
 
 
 # TASK-SPECIFIC BOILERPLATE
@@ -74,12 +86,12 @@ def read_input(test: bool = False):
 def parse_input(data):
     out = []
 
-    pattern = re.compile(r"(?s)(.+)")
+    pattern = re.compile(r"(?s)(\d+)-(\d+),(\d+)-(\d+)")
 
     for line in data:
         result = pattern.match(line).groups()
 
-        out.append(result)
+        out.append(tuple(map(int, result)))
 
     return out
 
@@ -95,4 +107,4 @@ def main(test=False):
 
 
 if __name__ == "__main__":
-    main(test=True)
+    main(test=False)

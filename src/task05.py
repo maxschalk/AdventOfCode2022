@@ -1,4 +1,5 @@
 import re
+from collections import defaultdict, deque
 
 from pathlib import Path
 from contextlib import suppress
@@ -15,11 +16,26 @@ TEST_INPUT_FILE = TEST_INPUT_DIR.joinpath(f"{FILE_STEM}.txt")
 
 
 def _solve_part_one(data):
-    print(data)
+    cargo, moves = data
+
+    for quant, from_stack, to_stack in moves:
+        for _ in range(quant):
+            cargo[to_stack].append(cargo[from_stack].pop())
+
+    return str.join('', map(lambda t: t[1], sorted(map(lambda t: (t[0], t[1][-1]), cargo.items()))))
 
 
 def _solve_part_two(data):
-    raise NotImplementedError
+    cargo, moves = data
+
+    for quant, from_stack, to_stack in moves:
+        temp = deque()
+        for _ in range(quant):
+            temp.appendleft(cargo[from_stack].pop())
+
+        cargo[to_stack].extend(temp)
+
+    return str.join('', map(lambda t: t[1], sorted(map(lambda t: (t[0], t[1][-1]), cargo.items()))))
 
 
 # TASK-SPECIFIC BOILERPLATE
@@ -35,7 +51,7 @@ def solve_part_two(data):
 
 def solve_test(data):
     with suppress(NotImplementedError):
-        print(f"Part 1 - {_solve_part_one(data)}")
+        # print(f"Part 1 - {_solve_part_one(data)}")
 
         print("-" * 15)
 
@@ -55,7 +71,7 @@ def solve_test_individual_lines(data):
 
 def solve(data):
     with suppress(NotImplementedError):
-        solve_part_one(data)
+        # solve_part_one(data)
         solve_part_two(data)
 
 
@@ -72,16 +88,37 @@ def read_input(test: bool = False):
 
 
 def parse_input(data):
-    out = []
 
-    pattern = re.compile(r"(?s)(.+)")
+    iter_data = iter(data)
 
-    for line in data:
-        result = pattern.match(line).groups()
+    cargo = defaultdict(deque)
 
-        out.append(result)
+    for line in iter_data:
+        if line == "":
+            break
 
-    return out
+        cargoline = line[1::4]
+
+        if str.isnumeric(cargoline):
+            continue
+
+        for ind, letter in enumerate(cargoline, start=1):
+            if letter == " ":
+                continue
+
+            cargo[ind].appendleft(letter)
+
+    moves = []
+
+    move_pattern = re.compile(r"(?s)move (\d+) from (\d+) to (\d+)")
+
+    for line in iter_data:
+        result = move_pattern.match(line).groups()
+
+        moves.append(tuple(map(int, result)))
+
+
+    return dict(cargo), moves
 
 
 def main(test=False):
@@ -95,4 +132,4 @@ def main(test=False):
 
 
 if __name__ == "__main__":
-    main(test=True)
+    main(test=False)

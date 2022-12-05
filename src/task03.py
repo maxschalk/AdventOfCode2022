@@ -1,4 +1,5 @@
 import re
+import string
 
 from pathlib import Path
 from contextlib import suppress
@@ -13,13 +14,63 @@ TEST_INPUT_FILE = TEST_INPUT_DIR.joinpath(f"{FILE_STEM}.txt")
 
 # SOLUTION
 
+PRIORITIES = {
+    letter: p + 1
+    for p, letter in enumerate((*string.ascii_lowercase, *string.ascii_uppercase))
+}
+
+
+def split_string_halves(s):
+    str_len = len(s)
+    return s[: str_len // 2], s[str_len // 2 :]
+
+
+def get_duplicate(backpack):
+    comp1, comp2 = backpack
+
+    duplicates = set(comp1).intersection(comp2)
+
+    dup, *rest = duplicates
+
+    assert len(rest) == 0
+
+    return dup
+
 
 def _solve_part_one(data):
-    print(data)
+    backpacks = map(split_string_halves, data)
+
+    duplicates = map(get_duplicate, backpacks)
+
+    return sum(PRIORITIES[item] for item in duplicates)
+
+
+def chunks(lst, n):
+    for i in range(0, len(lst), n):
+        yield lst[i : i + n]
+
+
+def get_multi_intersection(iterables):
+    item, *iterables = iterables
+
+    res = set(item)
+
+    for i in iterables:
+        res = res.intersection(set(i))
+
+    assert len(res) == 1
+
+    item, *rest = res
+
+    return item
 
 
 def _solve_part_two(data):
-    raise NotImplementedError
+    backpack_groups = chunks(data, 3)
+
+    tags = map(get_multi_intersection, backpack_groups)
+
+    return sum(PRIORITIES[item] for item in tags)
 
 
 # TASK-SPECIFIC BOILERPLATE
@@ -45,7 +96,7 @@ def solve_test(data):
 def solve_test_individual_lines(data):
     with suppress(NotImplementedError):
         for line in data:
-            print(f"Part 1: {line}: {_solve_part_one(line)}")
+            print(f"Part 1: {line}: {solve_part_one(line)}")
 
         print("-" * 30)
 
@@ -71,22 +122,8 @@ def read_input(test: bool = False):
     return content.split("\n")
 
 
-def parse_input(data):
-    out = []
-
-    pattern = re.compile(r"(?s)(.+)")
-
-    for line in data:
-        result = pattern.match(line).groups()
-
-        out.append(result)
-
-    return out
-
-
 def main(test=False):
     data = read_input(test)
-    data = parse_input(data)
 
     if test:
         solve_test(data)
@@ -95,4 +132,4 @@ def main(test=False):
 
 
 if __name__ == "__main__":
-    main(test=True)
+    main(test=False)
