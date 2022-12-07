@@ -22,7 +22,9 @@ def _solve_part_one(data):
         for _ in range(quant):
             cargo[to_stack].append(cargo[from_stack].pop())
 
-    return str.join('', map(lambda t: t[1], sorted(map(lambda t: (t[0], t[1][-1]), cargo.items()))))
+    return str.join(
+        "", map(lambda t: t[1], sorted(map(lambda t: (t[0], t[1][-1]), cargo.items())))
+    )
 
 
 def _solve_part_two(data):
@@ -35,7 +37,9 @@ def _solve_part_two(data):
 
         cargo[to_stack].extend(temp)
 
-    return str.join('', map(lambda t: t[1], sorted(map(lambda t: (t[0], t[1][-1]), cargo.items()))))
+    return str.join(
+        "", map(lambda t: t[1], sorted(map(lambda t: (t[0], t[1][-1]), cargo.items())))
+    )
 
 
 # TASK-SPECIFIC BOILERPLATE
@@ -116,7 +120,6 @@ def parse_input(data):
         result = move_pattern.match(line).groups()
 
         moves.append(tuple(map(int, result)))
-
 
     return dict(cargo), moves
 
